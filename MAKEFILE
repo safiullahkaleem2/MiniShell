@@ -1,0 +1,32 @@
+# ────────────────  Configuration  ────────────────
+CC      := gcc
+CFLAGS  := -Wall -Wextra -pedantic -std=c17
+LDFLAGS :=
+TARGET  := minishell
+SRC     := minishell.c
+OBJ     := $(SRC:.c=.o)
+
+# ────────────────  Build Rules  ────────────────
+.PHONY: all debug clean run
+
+all: $(TARGET)
+
+# Debug build with symbols and no optimizations
+debug: CFLAGS += -g -O0
+debug: $(TARGET)
+
+# Link step
+$(TARGET): $(OBJ)
+	$(CC) $(OBJ) $(LDFLAGS) -o $@
+
+# Compile step
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Convenience target to run the shell after building
+run: all
+	./$(TARGET)
+
+# Remove build artifacts
+clean:
+	rm -f $(OBJ) $(TARGET)
